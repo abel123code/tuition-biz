@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="bg-white border-t border-gray-200">
       <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row justify-between items-center">
         <p className="text-gray-500 text-sm text-center sm:text-left">
-          © {new Date().getFullYear()} EDUCARDS, Inc. All rights reserved.
+          © {new Date().getFullYear()} Educards, Inc. All rights reserved.
         </p>
         <div className="flex justify-center sm:justify-start mt-2 sm:mt-0 space-x-4">
           <a href="https://www.facebook.com" className="text-gray-500 hover:text-gray-900">
