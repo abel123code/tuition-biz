@@ -90,7 +90,10 @@ export default function AboutUs() {
               <p className="mt-6">
                 Our materials are more than just tools—they're part of a larger commitment to your success. With our comprehensive content, digital flashcards, and personalized study plans, you can study smarter, not harder. Join thousands of students who trust our materials to help them achieve their academic goals.
               </p>
-              <button onClick={handleNavigation} className="mt-6 bg-black text-white rounded-full w-4/5 mx-auto block px-6 py-2 hover:bg-purple-600">
+              <button 
+                onClick={handleNavigation} 
+                className="mt-6 bg-black text-white rounded-md w-4/5 mx-auto block px-6 py-2 hover:transform transition-transform duration-300 hover:scale-105"
+              >
                 Back To Home
               </button>
             </div>
