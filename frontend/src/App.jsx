@@ -8,6 +8,7 @@ import RegisterPage from './screens/Register';
 import CheckAndVerifyEmailPage from './screens/VerifyEmailPage';
 import Dashboard from './screens/Dashboard';
 import ResetPassword from './screens/ResetPassword';
+import PrivateRoute from './component/PrivateRoute';
 
 function App() {
   return (
@@ -19,8 +20,13 @@ function App() {
           <Route path='/Login' element={<LoginPage />} />
           <Route path='/Register' element={<RegisterPage />} />
           <Route path='/Verify-email' element={<CheckAndVerifyEmailPage />} />
-          <Route path='/Dashboard' element={<Dashboard />} />
           <Route path="/Reset-password" element={<ResetPassword />} />
+          <Route path='/Dashboard' element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+            } 
+          />
         </Routes>
       </AuthProvider>
     </Router>
