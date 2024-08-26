@@ -39,17 +39,20 @@ function LoginPage() {
 
     const resendVerificationEmail = async () => {
         const auth = getAuth();
-        const user = auth.currentUser;
-
-        if (user && !user.emailVerified) {
-            try {
+    
+        try {
+            // Re-authenticate the user to ensure they are signed in before resending verification email
+            const userCredentials = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredentials.user;
+    
+            if (user && !user.emailVerified) {
                 await sendEmailVerification(user);
                 setInfoMessage('Verification email resent. Please check your inbox.');
-            } catch (error) {
-                setErrorMessage('Failed to resend verification email. Please try again later.');
+            } else {
+                setErrorMessage('Your email is already verified or no user found.');
             }
-        } else {
-            setErrorMessage('User not found or email already verified.');
+        } catch (error) {
+            setErrorMessage('Failed to resend verification email. Please try again later.');
         }
     };
 
