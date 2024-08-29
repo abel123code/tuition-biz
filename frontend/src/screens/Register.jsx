@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
+import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
+import { db } from '@/firebaseConfig';
 
 function RegisterPage() {
     const [email, setEmail] = useState('');
@@ -25,6 +27,16 @@ function RegisterPage() {
                 const user = userCredentials.user;
 
                 await sendEmailVerification(user);
+
+                // Store basic user data in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    email: user.email,
+                    createdAt: new Date(),
+                    username: "", // Placeholder for username
+                    role: "student", // Default role
+                    profilePictureURL: "", // Placeholder for profile picture URL
+                    bio: "" // Placeholder for user bio
+                });
 
                 // Redirect to a page that informs the user to check their email
                 navigate('/Verify-email');

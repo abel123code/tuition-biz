@@ -9,6 +9,8 @@ import CheckAndVerifyEmailPage from './screens/VerifyEmailPage';
 import Dashboard from './screens/Dashboard';
 import ResetPassword from './screens/ResetPassword';
 import PrivateRoute from './component/PrivateRoute';
+import Layout from './component/Layout';
+import Profile from './screens/Profile';
 
 function App() {
   return (
@@ -23,10 +25,19 @@ function App() {
           <Route path="/Reset-password" element={<ResetPassword />} />
           <Route path='/Dashboard' element={
             <PrivateRoute>
-              <Dashboard />
+              <Layout>
+                <Dashboard />
+              </Layout>
             </PrivateRoute>
-            } 
+          } 
           />
+          <Route path='/Profile' element={
+            <PrivateRoute>
+              <Layout>
+                <Profile />
+              </Layout>
+            </PrivateRoute>
+          } />
         </Routes>
       </AuthProvider>
     </Router>
