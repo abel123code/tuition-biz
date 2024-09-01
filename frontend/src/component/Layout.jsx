@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../assets/EDUCARDS.jpg';
 import { getAuth, signOut } from "firebase/auth";
 import { useAuth } from '../contexts/AuthContext';
@@ -9,13 +9,9 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from '../firebaseConfig'; // Adjust this import based on your project structure
 import eventBus from '@/utils/eventBus';
 
-
-const navigation = [
-  { name: 'Dashboard', href: '/dashboard', current: true },
-  { name: 'Team', href: '/dashboard', current: false },
-  { name: 'Projects', href: '/dashboard', current: false },
-  { name: 'Calendar', href: '/dashboard', current: false },
-  { name: 'Reports', href: '/dashboard', current: false },
+const initialNavigation = [
+  { name: 'Dashboard', href: '/Dashboard', current: true },
+  { name: 'Courses', href: '/Courses', current: false },
 ];
 
 const userNavigation = [
@@ -35,7 +31,9 @@ export default function Layout({ children }) {
     email: '',
     imageUrl: '',
   });
+  const [navigation, setNavigation] = useState(initialNavigation);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchUserData = async () => {
     if (currentUser) {
@@ -67,6 +65,15 @@ export default function Layout({ children }) {
     };
   }, [currentUser]);
 
+  useEffect(() => {
+    const updatedNavigation = navigation.map((item) =>
+      item.href === location.pathname
+        ? { ...item, current: true }
+        : { ...item, current: false }
+    );
+    setNavigation(updatedNavigation);
+  }, [location.pathname]);
+
   const handleLogout = async () => {
     const auth = getAuth();
     try {
@@ -75,6 +82,16 @@ export default function Layout({ children }) {
     } catch (error) {
       console.error("Error logging out: ", error);
     }
+  };
+
+
+  const handleNavClick = (name) => {
+    const updatedNavigation = navigation.map((item) =>
+      item.name === name
+        ? { ...item, current: true }
+        : { ...item, current: false }
+    );
+    setNavigation(updatedNavigation);
   };
 
   return (
@@ -96,9 +113,10 @@ export default function Layout({ children }) {
                     <a
                       key={item.name}
                       href={item.href}
+                      onClick={() => handleNavClick(item.name)}
                       aria-current={item.current ? 'page' : undefined}
                       className={classNames(
-                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        item.current ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                         'rounded-md px-3 py-2 text-sm font-medium',
                       )}
                     >
@@ -166,9 +184,10 @@ export default function Layout({ children }) {
                 key={item.name}
                 as="a"
                 href={item.href}
+                onClick={() => handleNavClick(item.name)}
                 aria-current={item.current ? 'page' : undefined}
                 className={classNames(
-                  item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                  item.current ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                   'block rounded-md px-3 py-2 text-base font-medium',
                 )}
               >
@@ -179,7 +198,7 @@ export default function Layout({ children }) {
           <div className="border-t border-gray-700 pb-3 pt-4">
             <div className="flex items-center px-5">
               <div className="flex-shrink-0">
-                <img alt="" src={userData.imageUrl} className="h-10 w-10 rounded-full" />
+                <img alt="" src={userData.imageUrl} className="h-10 w-10 rounded-full object-cover" />
               </div>
               <div className="ml-3">
                 <div className="text-base font-medium leading-none text-white">{userData.name}</div>

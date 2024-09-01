@@ -11,6 +11,7 @@ import ResetPassword from './screens/ResetPassword';
 import PrivateRoute from './component/PrivateRoute';
 import Layout from './component/Layout';
 import Profile from './screens/Profile';
+import Courses from './screens/Courses';
 
 function App() {
   return (
@@ -38,6 +39,14 @@ function App() {
               </Layout>
             </PrivateRoute>
           } />
+          <Route path='/Courses' element={
+            <PrivateRoute>
+              <Layout>
+                <Courses />
+              </Layout>
+            </PrivateRoute>
+          } 
+          />
         </Routes>
       </AuthProvider>
     </Router>
