@@ -52,7 +52,7 @@ const PricingPage = () => {
             <div key={plan.name} className="bg-white rounded-lg p-8 shadow-lg w-full lg:w-1/3 text-black">
               <h3 className="text-2xl font-semibold">{plan.name}</h3>
               <p className="text-4xl font-bold mt-4">
-                {plan.price}<span className="text-lg font-normal">/month</span>
+                {plan.price}<span className="text-lg font-normal"> Lifetime</span>
               </p>
               <p className="text-sm text-gray-700 mt-2">{plan.description}</p>
               <button className="mt-6 bg-purple-500 text-white rounded-full w-4/5 mx-auto block px-6 py-2 hover:bg-purple-600">
