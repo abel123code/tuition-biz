@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '@/firebaseConfig'; // Your Firebase config file
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import CourseCard from '@/component/CourseCard';
+import LoadingSpinner from '@/component/LoadingSpinner';
 
 const Courses = ({ courseType = "slides" }) => {
     const [courses, setCourses] = useState([]);
@@ -30,7 +31,7 @@ const Courses = ({ courseType = "slides" }) => {
     }, [courseType]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <LoadingSpinner />;
     }
 
     return (

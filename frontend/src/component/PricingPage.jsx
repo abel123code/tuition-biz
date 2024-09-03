@@ -4,37 +4,35 @@ import { CheckIcon } from '@heroicons/react/24/outline'; // Correct import for H
 const PricingPage = () => {
   const pricingPlans = [
     {
-      name: "Basic",
-      price: "$10",
-      description: "$8 per month if paid annually",
+      name: "All Slides",
+      price: "$29.99",
+      description: "One-time purchase",
       features: [
-        "Access to 10 content notes",
-        "100 digital flashcards (basic level)",
+        "Access to all content notes",
+        "Lifetime access to updates",
         "Standard analytics",
         "Email support (48-hour response time)"
       ]
     },
     {
-      name: "Essential",
-      price: "$25",
-      description: "$20 per month if paid annually",
+      name: "All Flashcards",
+      price: "$39.99",
+      description: "One-time purchase",
       features: [
-        "Everything in Basic, plus:",
-        "Access to 50 content notes",
-        "500 digital flashcards (basic to intermediate)",
+        "Access to all digital flashcards",
+        "Lifetime access to updates",
         "Advanced analytics",
         "Priority email support (24-hour response time)",
         "Study progress tracking"
       ]
     },
     {
-      name: "Advanced",
-      price: "$50",
-      description: "$40 per month if paid annually",
+      name: "Slides & Flashcards",
+      price: "$49.99",
+      description: "One-time purchase",
       features: [
-        "Everything in Essential, plus:",
-        "Unlimited access to content notes",
-        "Unlimited digital flashcards (all levels)",
+        "Access to all content notes and digital flashcards",
+        "Lifetime access to updates",
         "Custom analytics and reporting tools",
         "Dedicated 1-hour support response time",
         "Access to exclusive study webinars",

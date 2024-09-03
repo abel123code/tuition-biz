@@ -15,6 +15,7 @@ import Courses from './screens/Courses';
 import SlidesPage from './screens/SlidesPage';
 import FlashcardPage from './screens/FlashcardPage';
 import MyResources from './screens/MyResources';
+import LoadingSpinner from './component/LoadingSpinner';
 
 function App() {
   return (

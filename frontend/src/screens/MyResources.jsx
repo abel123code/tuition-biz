@@ -3,6 +3,7 @@ import { db } from '@/firebaseConfig';
 import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '@/contexts/AuthContext'; // Import the Auth context
 import CourseCard from '@/component/CourseCard';
+import LoadingSpinner from '@/component/LoadingSpinner';
 
 const MyResources = () => {
     const { currentUser } = useAuth(); // Get the current user from AuthContext
@@ -40,7 +41,7 @@ const MyResources = () => {
     }, [currentUser]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <LoadingSpinner />;
     }
 
     if (!currentUser) {
