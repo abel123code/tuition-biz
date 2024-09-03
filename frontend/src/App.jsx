@@ -12,6 +12,9 @@ import PrivateRoute from './component/PrivateRoute';
 import Layout from './component/Layout';
 import Profile from './screens/Profile';
 import Courses from './screens/Courses';
+import SlidesPage from './screens/SlidesPage';
+import FlashcardPage from './screens/FlashcardPage';
+import MyResources from './screens/MyResources';
 
 function App() {
   return (
@@ -24,29 +27,11 @@ function App() {
           <Route path='/Register' element={<RegisterPage />} />
           <Route path='/Verify-email' element={<CheckAndVerifyEmailPage />} />
           <Route path="/Reset-password" element={<ResetPassword />} />
-          <Route path='/Dashboard' element={
-            <PrivateRoute>
-              <Layout>
-                <Dashboard />
-              </Layout>
-            </PrivateRoute>
-          } 
-          />
-          <Route path='/Profile' element={
-            <PrivateRoute>
-              <Layout>
-                <Profile />
-              </Layout>
-            </PrivateRoute>
-          } />
-          <Route path='/Courses' element={
-            <PrivateRoute>
-              <Layout>
-                <Courses />
-              </Layout>
-            </PrivateRoute>
-          } 
-          />
+          <Route path='/Dashboard' element={<PrivateRoute><Layout><Dashboard /></Layout></PrivateRoute>}/>
+          <Route path='/Profile' element={<PrivateRoute><Layout><Profile /></Layout></PrivateRoute>}/>
+          <Route path='/Slides' element={<PrivateRoute><Layout><SlidesPage /></Layout></PrivateRoute>}/>
+          <Route path='/Flashcards' element={<PrivateRoute><Layout><FlashcardPage /></Layout></PrivateRoute>}/>
+          <Route path='/MyResources' element={<PrivateRoute><Layout><MyResources /></Layout></PrivateRoute>}/>
         </Routes>
       </AuthProvider>
     </Router>

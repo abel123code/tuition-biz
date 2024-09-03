@@ -11,7 +11,9 @@ import eventBus from '@/utils/eventBus';
 
 const initialNavigation = [
   { name: 'Dashboard', href: '/Dashboard', current: true },
-  { name: 'Courses', href: '/Courses', current: false },
+  { name: 'Slides', href: '/Slides', current: false },
+  { name: 'Flashcards', href: '/Flashcards', current: false },
+  { name: 'My Resources', href: '/MyResources', current: false },
 ];
 
 const userNavigation = [
