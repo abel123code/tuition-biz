@@ -19,7 +19,7 @@ const Success = () => {
 
       try {
         // Fetch the checkout session details from the backend
-        const response = await fetch(`https://educard-86c06b06f6c2.herokuapp.com//checkout-session?sessionId=${sessionId}`);
+        const response = await fetch(`https://educard-86c06b06f6c2.herokuapp.com/checkout-session?sessionId=${sessionId}`);
         const data = await response.json();
         setSessionDetails(data);
         // If payment is successful, update Firestore with the purchase

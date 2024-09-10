@@ -30,7 +30,7 @@ const Checkout = () => {
 
       if (priceId && tier) {
         try {
-          const response = await fetch('https://educard-86c06b06f6c2.herokuapp.com//create-checkout-session', {
+          const response = await fetch('https://educard-86c06b06f6c2.herokuapp.com/create-checkout-session', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
