@@ -69,6 +69,8 @@ function LoginPage() {
 
                 if (user.emailVerified) {
                     navigate('/Dashboard');
+                    const token = await user.getIdToken()
+                    console.log("Token: ", token);
                 } else {
                     setErrorMessage('Please verify your email address before logging in.');
                     await auth.signOut(); // Prevent login if email is not verified

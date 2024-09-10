@@ -16,6 +16,11 @@ import SlidesPage from './screens/SlidesPage';
 import FlashcardPage from './screens/FlashcardPage';
 import MyResources from './screens/MyResources';
 import LoadingSpinner from './component/LoadingSpinner';
+import PricingPage from './component/PricingPage';
+import PricingScreen from './screens/PricingScreen';
+import Checkout from './screens/Checkout';
+import Success from './screens/PaymentSuccess';
+import ContentScreen from './screens/ContentScreen';
 
 function App() {
   return (
@@ -33,6 +38,10 @@ function App() {
           <Route path='/Slides' element={<PrivateRoute><Layout><SlidesPage /></Layout></PrivateRoute>}/>
           <Route path='/Flashcards' element={<PrivateRoute><Layout><FlashcardPage /></Layout></PrivateRoute>}/>
           <Route path='/MyResources' element={<PrivateRoute><Layout><MyResources /></Layout></PrivateRoute>}/>
+          <Route path='/PricingPage' element={<Layout><PricingScreen /></Layout>}/>
+          <Route path="/checkout" element={<PrivateRoute><Layout><Checkout /></Layout></PrivateRoute>} />
+          <Route path="/success" element={<PrivateRoute><Layout><Success /></Layout></PrivateRoute>} />
+          <Route path="/Content/:id" element={<PrivateRoute><Layout><ContentScreen /></Layout></PrivateRoute>} />
         </Routes>
       </AuthProvider>
     </Router>
