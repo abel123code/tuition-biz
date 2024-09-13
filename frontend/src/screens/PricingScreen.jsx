@@ -2,17 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // For navigation
 import { CheckIcon } from '@heroicons/react/24/outline'; // Correct import for Heroicons v2
 import { useAuth } from '@/contexts/AuthContext'; // Assuming you have an AuthContext for Firebase authentication
-import { getFirestore, doc, getDocs, query, collection } from 'firebase/firestore'; // Firestore imports
+import { getFirestore, collection, getDocs, query } from 'firebase/firestore'; // Firestore imports
 
 const PricingScreen = () => {
   const { currentUser } = useAuth(); // Check if the user is logged in
   const navigate = useNavigate();
   const db = getFirestore();
   const [userPurchases, setUserPurchases] = useState([]);
-
-  //tier 1 for slides
-  //tier 2 for flashcards
-  //tier 3 for Both
 
   // Fetch user's purchase data from Firestore
   useEffect(() => {
@@ -30,6 +26,22 @@ const PricingScreen = () => {
     fetchPurchases();
   }, [currentUser, db]);
 
+  // Check if the user has purchased a specific access type (slides, flashcards, both)
+  const hasPurchased = (accessType) => {
+    return userPurchases.some((purchase) => purchase.accessType === accessType);
+  };
+
+  // Handle the plan purchase
+  const handleBuyPlan = (priceId, tier) => {
+    if (!currentUser) {
+      // If user is not logged in, redirect to login page
+      navigate("/login");
+    } else {
+      // Redirect to the checkout page for the selected plan
+      navigate(`/checkout?priceId=${priceId}&tier=${tier}`);
+    }
+  };
+
   // Pricing plans with corresponding Stripe price IDs
   const pricingPlans = [
     {
@@ -44,7 +56,6 @@ const PricingScreen = () => {
       ],
       priceId: "price_1PvBJcIvjYHS1gNW1nQFO65Y", // Replace with your Stripe price ID
       tier: "1", // Tier for slides
-      courseId: "kHwiHZ2xjkm03XWoSooo",
       accessType: "slides", // Access type for slides
     },
     {
@@ -60,7 +71,6 @@ const PricingScreen = () => {
       ],
       priceId: "price_1PvBL8IvjYHS1gNWdoVq8V3t", // Replace with your Stripe price ID
       tier: "2", // Tier for flashcards
-      courseId: "koHQAaqFZhiAULTPw1pq",
       accessType: "flashcards", // Access type for flashcards
     },
     {
@@ -81,28 +91,22 @@ const PricingScreen = () => {
     }
   ];
 
-
-  // Check if the user has purchased a specific access type (slides or flashcards)
-  const hasPurchased = (accessType) => {
-    return userPurchases.some((purchase) => purchase.accessType === accessType);
-  };
-
-  // Check if the user has purchased both slides and flashcards
-  const hasPurchasedBoth = () => {
-    return hasPurchased('slides') && hasPurchased('flashcards');
-  };
-
-  // Handle the plan purchase
-  const handleBuyPlan = (priceId, tier) => {
-    if (!currentUser) {
-      // If user is not logged in, redirect to login page
-      navigate("/login");
-    } else {
-      // Redirect to the checkout page for the selected plan
-      navigate(`/checkout?priceId=${priceId}&tier=${tier}`);
+  const isDisabled = (plan) => {
+    // Case 1: If the user bought slides or flashcards, disable the purchase of the bundle
+    if (plan.accessType === 'both' && (hasPurchased('slides') || hasPurchased('flashcards'))) {
+      return true;
     }
+  
+    // Case 2: If the user bought the bundle, disable the purchase of individual slides or flashcards
+    if ((plan.accessType === 'slides' || plan.accessType === 'flashcards') && hasPurchased('both')) {
+      return true;
+    }
+  
+    // Case 3: Disable if the user already purchased this specific plan (slides, flashcards, or both)
+    return hasPurchased(plan.accessType);
   };
-
+  
+  
   return (
     <div className="bg-gray-900 text-white py-20 min-h-screen">
       <div className="container mx-auto text-center">
@@ -121,22 +125,12 @@ const PricingScreen = () => {
               <button
                 onClick={() => handleBuyPlan(plan.priceId, plan.tier)}
                 className={`mt-6 ${
-                  (plan.accessType === 'both' && hasPurchasedBoth()) ||
-                  hasPurchased(plan.accessType)
-                    ? 'bg-gray-500 cursor-not-allowed'
-                    : 'bg-purple-500 hover:bg-purple-600'
+                  isDisabled(plan) ? 'bg-gray-500 cursor-not-allowed' : 'bg-purple-500 hover:bg-purple-600'
                 } text-white rounded-full w-4/5 mx-auto block px-6 py-2`}
-                disabled={
-                  (plan.accessType === 'both' && hasPurchasedBoth()) ||
-                  hasPurchased(plan.accessType)
-                }
+                disabled={isDisabled(plan)}
               >
-                {(plan.accessType === 'both' && hasPurchasedBoth()) ||
-                hasPurchased(plan.accessType)
-                  ? 'Purchased'
-                  : 'Buy Plan'}
+                {isDisabled(plan) ? 'Purchased' : 'Buy Plan'}
               </button>
-
 
               <ul className="mt-6 space-y-2 text-left">
                 {plan.features.map((feature, index) => (
