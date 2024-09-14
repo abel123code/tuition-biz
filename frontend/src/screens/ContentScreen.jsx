@@ -36,7 +36,10 @@ const ContentScreen = () => {
           const topicsCollectionRef = collection(courseDocRef, 'topics');
           const topicsSnapshot = await getDocs(topicsCollectionRef);
           const topicsList = topicsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          setTopics(topicsList);
+
+          // Sort the topics based on the 'order' field
+          const sortedTopics = topicsList.sort((a, b) => a.order - b.order);
+          setTopics(sortedTopics);
 
           // Check if the user has purchased the course
           const purchasesRef = collection(db, `users/${currentUser.uid}/purchases`);
