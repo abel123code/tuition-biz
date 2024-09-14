@@ -14,8 +14,8 @@ const CourseCard = ({ course, isPurchased = false }) => {
 
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            <img src={course.thumbnail} alt={course.title} className="h-40 w-full object-cover rounded-t-lg" />
+        <div className="bg-white p-4 shadow-lg rounded-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            <img src={course.thumbnail} alt={course.title} className="h-40 w-full object-cover rounded-lg" />
             <div className="p-4">
                 <h3 className="text-xl font-semibold text-black text-left">{course.title}</h3>
                 <p className="text-gray-500 text-left text-sm mb-2">{course.category}</p>

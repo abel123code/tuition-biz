@@ -1,7 +1,9 @@
 import React from 'react';
 import { CheckIcon } from '@heroicons/react/24/outline'; // Correct import for Heroicons v2
+import { useNavigate } from 'react-router-dom';
 
 const PricingPage = () => {
+  const navigate = useNavigate();
   const pricingPlans = [
     {
       name: "All Slides",
@@ -40,12 +42,17 @@ const PricingPage = () => {
       ]
     }
   ];
+  
+  const handleBuyPlan = () => {
+    navigate('/PricingPage')
+  }
 
   return (
     <div className="bg-black text-white py-20">
       <div className="container mx-auto text-center">
         <h2 className="text-4xl font-bold mb-6">Choose the Right Plan for You</h2>
-        <p className="text-lg mb-12">Select a plan that suits your learning needs and budget.</p>
+        <p className="text-lg mb-2">Select a plan that suits your learning needs and budget.</p>
+        <p className="text-lg mb-12">Prices are for each subject</p>
 
         <div className="flex flex-col lg:flex-row justify-center space-y-8 lg:space-y-0 lg:space-x-8">
           {pricingPlans.map((plan) => (
@@ -55,7 +62,7 @@ const PricingPage = () => {
                 {plan.price}<span className="text-lg font-normal"> Lifetime</span>
               </p>
               <p className="text-sm text-gray-700 mt-2">{plan.description}</p>
-              <button className="mt-6 bg-purple-500 text-white rounded-full w-4/5 mx-auto block px-6 py-2 hover:bg-purple-600">
+              <button className="mt-6 bg-purple-500 text-white rounded-full w-4/5 mx-auto block px-6 py-2 hover:bg-purple-600" onClick={handleBuyPlan}>
                 Buy Plan
               </button>
               <ul className="mt-6 space-y-2 text-left">
