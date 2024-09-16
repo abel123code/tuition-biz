@@ -8,7 +8,7 @@ const CourseCard = ({ course, isPurchased = false }) => {
         if (isPurchased) {
             navigate(`/Content/${course.id}`); // Redirect to study page if purchased
         } else {
-            navigate('/PricingPage'); // Redirect to pricing page if not purchased
+            navigate(`/PricingPage/${course.id}`); // Redirect to pricing page if not purchased
         }
     }
 

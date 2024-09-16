@@ -2,7 +2,8 @@ import React from 'react';
 import { CheckIcon } from '@heroicons/react/24/outline'; // Correct import for Heroicons v2
 import { useNavigate } from 'react-router-dom';
 
-const PricingPage = () => {
+const PricingPage = ({params}) => {
+  
   const navigate = useNavigate();
   const pricingPlans = [
     {
@@ -44,7 +45,7 @@ const PricingPage = () => {
   ];
   
   const handleBuyPlan = () => {
-    navigate('/PricingPage')
+    navigate('/dashboard')
   }
 
   return (

@@ -38,7 +38,7 @@ function App() {
           <Route path='/Slides' element={<PrivateRoute><Layout><SlidesPage /></Layout></PrivateRoute>}/>
           <Route path='/Flashcards' element={<PrivateRoute><Layout><FlashcardPage /></Layout></PrivateRoute>}/>
           <Route path='/MyResources' element={<PrivateRoute><Layout><MyResources /></Layout></PrivateRoute>}/>
-          <Route path='/PricingPage' element={<Layout><PrivateRoute><PricingScreen /></PrivateRoute></Layout>}/>
+          <Route path='/PricingPage/:id' element={<Layout><PrivateRoute><PricingScreen /></PrivateRoute></Layout>}/>
           <Route path="/checkout" element={<PrivateRoute><Layout><Checkout /></Layout></PrivateRoute>} />
           <Route path="/success" element={<PrivateRoute><Layout><Success /></Layout></PrivateRoute>} />
           <Route path="/Content/:id" element={<PrivateRoute><Layout><ContentScreen /></Layout></PrivateRoute>} />

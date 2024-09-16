@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import { doSignInWithGoogle } from '@/utils/auth';
+import { doc, setDoc, getDoc, getFirestore } from 'firebase/firestore';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -63,14 +64,34 @@ function LoginPage() {
         if (!isLoggingIn) {
             setIsLoggingIn(true);
             const auth = getAuth();
+            const db = getFirestore();
             try {
                 const result = await doSignInWithGoogle();
                 const user = result.user;
+                
 
                 if (user.emailVerified) {
+                    console.log(user)
+                    // Check if the user is new
+                    const userDoc = await getDoc(doc(db, 'users', user.uid));
+                    
+                    if (!userDoc.exists()) {
+                        // User doesn't exist, create new user document
+                        await setDoc(doc(db, 'users', user.uid), {
+                            email: user.email,
+                            createdAt: new Date(),
+                            username: user.email.split("@")[0],
+                            role: "student", // Default role
+                            profilePictureURL: "", // Placeholder for profile picture URL
+                            bio: "" // Placeholder for user bio
+                            // Add any other fields you want to store
+                        });
+                        //console.log("New user created in Firestore");
+                    }
+
                     navigate('/Dashboard');
                     const token = await user.getIdToken()
-                    console.log("Token: ", token);
+                    //console.log("Token: ", token);
                 } else {
                     setErrorMessage('Please verify your email address before logging in.');
                     await auth.signOut(); // Prevent login if email is not verified

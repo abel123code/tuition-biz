@@ -1,30 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // For navigation
 import { CheckIcon } from '@heroicons/react/24/outline'; // Correct import for Heroicons v2
-import { useAuth } from '@/contexts/AuthContext'; // Assuming you have an AuthContext for Firebase authentication
-import { getFirestore, collection, getDocs, query } from 'firebase/firestore'; // Firestore imports
+import { useAuth } from '@/contexts/AuthContext';
+import { useParams } from 'react-router-dom';
+import { getFirestore, collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 
-const PricingScreen = () => {
+const PricingScreen = ({params}) => { 
+  const { id } = useParams();
   const { currentUser } = useAuth(); // Check if the user is logged in
   const navigate = useNavigate();
   const db = getFirestore();
   const [userPurchases, setUserPurchases] = useState([]);
+  const [pricingPlans, setPricingPlans] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch user's purchase data from Firestore
+
   useEffect(() => {
-    const fetchPurchases = async () => {
+    const fetchData = async () => {
       if (currentUser) {
-        const q = query(
-          collection(db, 'users', currentUser.uid, 'purchases') // Fetch purchases from Firestore
-        );
-        const querySnapshot = await getDocs(q);
-        const purchases = querySnapshot.docs.map((doc) => doc.data());
-        setUserPurchases(purchases);
+        try {
+          // Fetch the course with the given ID
+          const courseDoc = await getDoc(doc(db, 'courses', id));
+          if (!courseDoc.exists()) {
+            console.error('Course not found');
+            setLoading(false);
+            return;
+          }
+
+          const course = courseDoc.data();
+          const subjectId = course.subjectId; // e.g., "OlevelPhysics"
+
+          // Fetch all courses with the same subjectId
+          const coursesQuery = query(collection(db, 'courses'), where('subjectId', '==', subjectId));
+          const coursesSnapshot = await getDocs(coursesQuery);
+          const courses = coursesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+          // Fetch the combo plan
+          const comboDoc = await getDoc(doc(db, 'combos', subjectId));
+          const comboData = comboDoc.exists() ? comboDoc.data() : null;
+
+          // Create pricing plans
+          const plans = createPricingPlans(courses, comboData);
+          console.log(pricingPlans)
+          setPricingPlans(plans);
+
+          // Fetch user purchases
+          const purchasesQuery = query(collection(db, 'users', currentUser.uid, 'purchases'));
+          const purchasesSnapshot = await getDocs(purchasesQuery);
+          const purchases = purchasesSnapshot.docs.map(doc => doc.data());
+          setUserPurchases(purchases);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } finally {
+          setLoading(false);
+        }
       }
     };
 
-    fetchPurchases();
-  }, [currentUser, db]);
+    fetchData();
+  }, [currentUser, db, id]);
 
   // Check if the user has purchased a specific access type (slides, flashcards, both)
   const hasPurchased = (accessType) => {
@@ -42,68 +76,100 @@ const PricingScreen = () => {
     }
   };
 
-  // Pricing plans with corresponding Stripe price IDs
-  const pricingPlans = [
-    {
-      name: "Slides",
-      price: "$29.99",
-      description: "One-time purchase",
-      features: [
-        "Access to all content notes",
-        "Lifetime access to updates",
-        "Standard analytics",
-        "Email support (48-hour response time)"
-      ],
-      priceId: "price_1PvBJcIvjYHS1gNW1nQFO65Y", // Replace with your Stripe price ID
-      tier: "1", // Tier for slides
-      accessType: "slides", // Access type for slides
-    },
-    {
-      name: "All Flashcards",
-      price: "$39.99",
-      description: "One-time purchase",
-      features: [
-        "Access to all digital flashcards",
-        "Lifetime access to updates",
-        "Advanced analytics",
-        "Priority email support (24-hour response time)",
-        "Study progress tracking"
-      ],
-      priceId: "price_1PvBL8IvjYHS1gNWdoVq8V3t", // Replace with your Stripe price ID
-      tier: "2", // Tier for flashcards
-      accessType: "flashcards", // Access type for flashcards
-    },
-    {
-      name: "Slides & Flashcards",
-      price: "$49.99",
-      description: "One-time purchase",
-      features: [
-        "Access to all content notes and digital flashcards",
-        "Lifetime access to updates",
-        "Custom analytics and reporting tools",
-        "Dedicated 1-hour support response time",
-        "Access to exclusive study webinars",
-        "Personalized study plan and coaching sessions"
-      ],
-      priceId: "price_1PvBLmIvjYHS1gNW98VlFS8F", // Replace with your Stripe price ID
-      tier: "3", // Tier for both slides and flashcards
-      accessType: "both", // To indicate both slides and flashcards
+  const createPricingPlans = (courses, comboData) => {
+    const slideCourse = courses.find(course => course.type === 'slides');
+    const flashcardCourse = courses.find(course => course.type === 'flashcards');
+
+    if (!slideCourse || !flashcardCourse) {
+      console.error('Missing slide or flashcard course');
+      return [];
     }
-  ];
+
+    const plans = [
+      {
+        name: `${slideCourse.title}`,
+        price: "$29.99",
+        description: "One-time purchase",
+        features: [
+          "Access to all content notes",
+          "Lifetime access to updates",
+          "Standard analytics",
+          "Email support (48-hour response time)"
+        ],
+        priceId: slideCourse.priceId,
+        tier: "1",
+        accessType: "slides",
+        courseId: slideCourse.id
+      },
+      {
+        name: `${flashcardCourse.title}`,
+        price: "$39.99",
+        description: "One-time purchase",
+        features: [
+          "Access to all digital flashcards",
+          "Lifetime access to updates",
+          "Advanced analytics",
+          "Priority email support (24-hour response time)"
+        ],
+        priceId: flashcardCourse.priceId,
+        tier: "2",
+        accessType: "flashcards",
+        courseId: flashcardCourse.id
+      }
+    ];
+
+    if (comboData) {
+      plans.push({
+        name: comboData.title,
+        price: "$49.99",
+        description: "One-time purchase",
+        features: [
+          "Access to all content notes and digital flashcards",
+          "Lifetime access to updates",
+          "Custom analytics and reporting tools",
+          "Dedicated 1-hour support response time",
+          "Access to exclusive study webinars",
+          "Personalized study plan and coaching sessions"
+        ],
+        priceId: comboData.priceId,
+        tier: "3",
+        accessType: "both",
+        courseId: `${slideCourse.id},${flashcardCourse.id}`
+      });
+    }
+
+    return plans;
+  };
 
   const isDisabled = (plan) => {
-    // Case 1: If the user bought slides or flashcards, disable the purchase of the bundle
-    if (plan.accessType === 'both' && (hasPurchased('slides') || hasPurchased('flashcards'))) {
-      return true;
+    if (!currentUser) return false; // Not disabled if user is not logged in
+
+    // For combo plans (accessType === 'both')
+    if (plan.accessType === 'both') {
+      const [slideCourseId, flashcardCourseId] = plan.courseId.split(',');
+      
+      // Check if user has purchased the combo or both individual courses
+      const hasComboPurchase = userPurchases.some(purchase => 
+        purchase.courseId === plan.courseId && purchase.accessType === 'both'
+      );
+      
+      const hasIndividualPurchases = userPurchases.some(purchase => 
+        purchase.courseId === slideCourseId && purchase.accessType === 'slides'
+      ) && userPurchases.some(purchase => 
+        purchase.courseId === flashcardCourseId && purchase.accessType === 'flashcards'
+      );
+
+      return hasComboPurchase || hasIndividualPurchases;
     }
   
-    // Case 2: If the user bought the bundle, disable the purchase of individual slides or flashcards
-    if ((plan.accessType === 'slides' || plan.accessType === 'flashcards') && hasPurchased('both')) {
-      return true;
-    }
+    // Find the purchase that matches the current course ID and access type
+    const matchingPurchase = userPurchases.find(purchase => 
+      purchase.courseId === plan.courseId && 
+      (purchase.accessType === plan.accessType || purchase.accessType === 'both')
+    );
   
-    // Case 3: Disable if the user already purchased this specific plan (slides, flashcards, or both)
-    return hasPurchased(plan.accessType);
+    // If there's a matching purchase, the plan is disabled (already purchased)
+    return !!matchingPurchase;
   };
   
   
