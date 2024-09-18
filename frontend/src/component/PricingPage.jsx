@@ -52,8 +52,8 @@ const PricingPage = ({params}) => {
     <div className="bg-black text-white py-20">
       <div className="container mx-auto text-center">
         <h2 className="text-4xl font-bold mb-6">Choose the Right Plan for You</h2>
-        <p className="text-lg mb-2">Select a plan that suits your learning needs and budget.</p>
-        <p className="text-lg mb-12">Prices are for each subject</p>
+        <p className="text-xl mb-2">Select a plan that suits your learning needs and budget.</p>
+        <p className="text-lg mb-12">Prices are for each subject. Sign up for free to get a Demo</p>
 
         <div className="flex flex-col lg:flex-row justify-center space-y-8 lg:space-y-0 lg:space-x-8">
           {pricingPlans.map((plan) => (

@@ -8,9 +8,12 @@ const PDFReader = ({ contentURL }) => {
     <iframe
       src={pdfURL}
       title="PDF Viewer"
-      width="100%"
-      height="100%"
-      style={{ border: 'none' }}
+      className="w-full h-full"
+      style={{
+        border: 'none',
+        width: '100%',
+        height: '100%',
+      }}
     />
   );
 };
