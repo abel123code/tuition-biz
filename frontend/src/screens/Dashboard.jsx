@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { GradualSpacingDemo } from '@/component/GradualSpacingDemo';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebaseConfig'; // Adjust the import path for your Firebase config
 import DemoContentSection from '@/component/DemoContentSection'
+import { useNavigate } from 'react-router-dom';
+
 
 function Dashboard() {
   const slidesPdfUrl = 'https://firebasestorage.googleapis.com/v0/b/tuition-biz.appspot.com/o/courses%2Fslides%2FForces.pdf?alt=media&token=e640406a-0662-408d-9cae-18da691ed897'
   const flashcardsPdfUrl = 'https://firebasestorage.googleapis.com/v0/b/tuition-biz.appspot.com/o/courses%2Fflashcards%2FForces%20flashcard.pdf?alt=media&token=f734a3af-cea6-4ea9-9d76-bc6bff0aa6b4'
+
+  const navigate = useNavigate()
 
   const handleGetStarted = () => {
     navigate('/Slides');
