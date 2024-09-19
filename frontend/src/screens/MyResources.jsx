@@ -80,7 +80,6 @@ const MyResources = () => {
 
     return (
         <div className="bg-gray-900 min-h-screen text-white py-12">
-            <GradualSpacingDemo text={`Welcome back, ${userData.name}`} />
             <div className="container mx-auto px-4">
                 <h1 className="text-4xl font-bold mb-8">My Resources</h1>
                 {resources.length > 0 ? (

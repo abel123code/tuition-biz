@@ -1,28 +1,20 @@
 import React from 'react';
 
-const PDFReader = ({ contentURL, height }) => {
-  // Appending #toolbar=0 to disable the PDF toolbar
-  const pdfURL = `${contentURL}#toolbar=0`;
+const PDFReader = ({ contentURL }) => {
+  // Appending #toolbar=0 to disable the PDF toolbar (no download or print)
+  const pdfURL = `${contentURL}`;
 
   return (
-    <div
+    <iframe
+      src={pdfURL}
+      title="PDF Viewer"
+      className="w-full h-full"
       style={{
+        border: 'none',
         width: '100%',
-        height: height,
-        overflow: 'auto',
-        WebkitOverflowScrolling: 'touch', // Enables momentum scrolling on iOS
+        height: '100%',
       }}
-    >
-      <iframe
-        src={pdfURL}
-        title="PDF Viewer"
-        style={{
-          border: 'none',
-          width: '100%',
-          height: '100%',
-        }}
-      />
-    </div>
+    />
   );
 };
 
