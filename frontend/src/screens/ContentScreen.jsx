@@ -125,7 +125,7 @@ const ContentScreen = () => {
           <div className="mt-8 w-full">
             <h2 className="text-2xl font-semibold mb-4">Viewing Topic</h2>
             <div className="w-full h-[80vh] bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <PDFReader contentURL={openedTopic} />
+              <PDFReader contentURL={openedTopic} height={'80vh'} />
             </div>
           </div>
         )}
